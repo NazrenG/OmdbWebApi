@@ -1,0 +1,6 @@
+@OmdbWebApi_HostAddress = http://localhost:5211
+
+GET {{OmdbWebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
