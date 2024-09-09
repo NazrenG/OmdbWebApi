@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using OmdbWebApi.Data;
+using OmdbWebApi.Repositories.Abstract;
+using OmdbWebApi.Repositories.Concretes;
+using OmdbWebApi.Services.Concretes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpClient<MovieService>();
+
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+
 var conn = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<MovieDbContext>(opt =>
 {
@@ -17,6 +24,7 @@ builder.Services.AddDbContext<MovieDbContext>(opt =>
 });
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
