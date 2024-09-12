@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using OmdbWebApi.Dtos;
+using OmdbWebApi.Entities;
 using OmdbWebApi.Repositories.Abstract;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,43 +13,31 @@ namespace OmdbWebApi.Controllers
     public class MovieController : ControllerBase
     {
         private readonly IMovieRepository _movieRepository;
+        private readonly IMapper _mapper;
 
-        public MovieController(IMovieRepository movieRepository)
+        public MovieController(IMovieRepository movieRepository,IMapper mapper)
         {
             _movieRepository = movieRepository;
+            _mapper = mapper;
         }
 
         // GET: api/<MovieController>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-         var items=  await  _movieRepository.GetAllAsync(); 
-            return Ok(items);
+         var items=  await  _movieRepository.GetAllAsync();
+            var dto = _mapper.Map<IEnumerable< Movie>>(items);
+            return Ok(dto);
         }
 
         // GET api/<MovieController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            var item =await _movieRepository.GetAsync(id);
+            return Ok(item);
         }
 
-        // POST api/<MovieController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<MovieController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<MovieController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+     
     }
 }
